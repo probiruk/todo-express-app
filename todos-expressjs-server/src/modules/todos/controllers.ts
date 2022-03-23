@@ -5,7 +5,7 @@ import {
 } from '../../utils/controller-result.model';
 import { todosDal, TodosDal } from './dal';
 import { ITodoPayload, Todo } from './model';
-import { validateTodoCreatePayload } from './validator';
+import { validateTodoCreatePayload, validateTodoEditPayload } from './validator';
 
 export class TodosController {
   todosDal: TodosDal;
@@ -24,17 +24,27 @@ export class TodosController {
 
   //TODO: Implement get all
   getAll(): IControllerResult<Todo[]> {
-    return null;
+    return newControllerData(this.todosDal.getAll());
   }
 
   //TODO: Implement update
   update(payload: ITodoPayload, id: string): IControllerResult<Todo> {
-    return null;
+    const { error, value } = validateTodoEditPayload(payload);
+    if (error) {
+      return newControllerError(error.details[0].message, 400);
+    }
+
+    return newControllerData(this.todosDal.edit(payload, id));
   }
 
   //TODO: Implement delete
-  delete(id: string): IControllerResult<String> {
-    return null;
+  delete(id: string): String {
+    const deleted = newControllerData(this.todosDal.delete(id));
+    if (deleted) {
+      return "Todo deleted successfully";
+    } else {
+      return "Something went wrong";
+    }
   }
 }
 

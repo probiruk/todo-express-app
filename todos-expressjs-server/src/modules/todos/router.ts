@@ -6,9 +6,28 @@ const router = Router();
 
 // Get All
 router.get(
-  '/',
+  '/get-all',
   resultHandler(async (req: Request, res: Response) => {
-    return todosController.getAll();
+    return res.json(todosController.getAll());
+  }),
+);
+
+// Update
+router.put(
+  '/update/:id',
+  resultHandler(async (req: Request, res: Response) => {
+    const payload = req.body;
+    const { id } = req.params;
+    return res.json(todosController.update(payload, id));
+  }),
+);
+
+// Update
+router.delete(
+  '/delete/:id',
+  resultHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    return res.json({ msg: todosController.delete(id) });
   }),
 );
 
